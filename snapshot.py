@@ -41,7 +41,15 @@ async def printUserInfos(user, tag, api_key):
                 print(f"Error: {response.status} ({user}#{tag})")
                 return
             datas = (await response.json())
-            print(datas)
+            matchId = datas[0]
+        api_uri = f"https://europe.api.riotgames.com/tft/match/v1/matches/{matchId}"
+        async with session.get(api_uri, headers=headers) as response:
+            if response.status != 200:
+                print(f"Error match: {response.status} ({user}#{tag})")
+                return
+            datas = await response.json()
+            print(datas["info"]["participants"])
+
 
 async def main():
     api_key = os.environ.get('RIOT_API_KEY')
@@ -50,15 +58,15 @@ async def main():
         return
     task = []
     for i in range(1): 
-        task.append(printUserInfos("Toonutv", "EUW", api_key))
+        #task.append(printUserInfos("Toonutv", "EUW", api_key))
         task.append(printUserInfos("Falkor", "Genti", api_key))
-        task.append(printUserInfos("Megata", "0000", api_key))
-        task.append(printUserInfos("Essrog", "TFT", api_key))
-        task.append(printUserInfos("Arestidios", "AAA", api_key))
-        task.append(printUserInfos("Azzo", "009", api_key))
-        task.append(printUserInfos("Yottah", "0000", api_key))
-        task.append(printUserInfos("Lornyk", "888", api_key))
-        task.append(printUserInfos("etre infame", "EUW", api_key))
+        #task.append(printUserInfos("Megata", "0000", api_key))
+        #task.append(printUserInfos("Essrog", "TFT", api_key))
+        #task.append(printUserInfos("Arestidios", "AAA", api_key))
+        #task.append(printUserInfos("Azzo", "009", api_key))
+        #task.append(printUserInfos("Yottah", "0000", api_key))
+        #task.append(printUserInfos("brozilla", "brz", api_key))
+        #task.append(printUserInfos("etre infame", "EUW", api_key))
     results = await asyncio.gather(*task)
 
 if __name__ == "__main__":
