@@ -1,4 +1,3 @@
-import requests
 import asyncio
 import aiohttp
 import os
@@ -6,50 +5,63 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-async def printUserInfos(user, tag, api_key):
+class User:
+    def __init__(self, username, tag, puuid=None):
+        self.username = username
+        self.tag = tag
+        self.puuid = puuid
+
+async def getPuuid(username, tag, api_key):
     """'user' (string) must designs a valid riot ID"""
-    api_uri = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + user + "/" + tag
+    api_uri = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + username + "/" + tag
     headers = {
             "X-Riot-Token": api_key
     }
     async with aiohttp.ClientSession() as session:
         async with session.get(api_uri, headers=headers) as response:
             if response.status != 200:
-                print(f"Error: {response.status} ({user}#{tag})")
+                print(f"Error: {response.status} ({username}#{tag})")
                 if response.status == 404:
                     return
                 await asyncio.sleep(1)
                 return await printUserInfos(user, tag)
             datas = await response.json()
             puuid = datas["puuid"]
-            api_uri = "https://euw1.api.riotgames.com/tft/league/v1/by-puuid/"
-            api_uri += puuid
+    return puuid
+
+async def printUserInfos(user, api_key):
+    async with aiohttp.ClientSession() as session:
+        headers = {
+                "X-Riot-Token": api_key
+        }
+        api_uri = "https://euw1.api.riotgames.com/tft/league/v1/by-puuid/"
+        api_uri += user.puuid
         async with session.get(api_uri, headers=headers) as response:
             if response.status != 200:
-                print(f"Error: {response.status} ({user}#{tag})")
-                #await asyncio.sleep(1)
+                print(f"Error: {response.status} ({user.username}#{user.tag})")
                 return
-                #return await printUserInfos(user, tag)
             datas = (await response.json())
             if len(datas) == 0:
                 return
             datas = datas[0]
-            print(user, tag, datas['tier'], datas['rank'], datas['leaguePoints'])
-        api_uri  = f"https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/{puuid}/ids"
+            print(user.username, user.tag, datas['tier'], datas['rank'], datas['leaguePoints'])
+        api_uri  = f"https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/{user.puuid}/ids"
         async with session.get(api_uri, headers=headers) as response:
             if response.status != 200:
-                print(f"Error: {response.status} ({user}#{tag})")
+                print(f"Error: {response.status} ({user.username}#{user.tag})")
                 return
             datas = (await response.json())
             matchId = datas[0]
         api_uri = f"https://europe.api.riotgames.com/tft/match/v1/matches/{matchId}"
         async with session.get(api_uri, headers=headers) as response:
             if response.status != 200:
-                print(f"Error match: {response.status} ({user}#{tag})")
+                print(f"Error match: {response.status} ({user.username}#{user.tag})")
                 return
             datas = await response.json()
-            print(datas["info"]["participants"])
-
+            game = datas["info"]["participants"]
+            for i in range(8):
+                playerInfo = game[i]
+                print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"])
 
 async def main():
     api_key = os.environ.get('RIOT_API_KEY')
@@ -57,9 +69,11 @@ async def main():
         print("Error: no riot api key detected")
         return
     task = []
-    for i in range(1): 
+    puuid = await getPuuid("Falkor", "Genti", api_key)
+    falkor = User("Falkor", "Genti", puuid)
+    for i in range(1):
         #task.append(printUserInfos("Toonutv", "EUW", api_key))
-        task.append(printUserInfos("Falkor", "Genti", api_key))
+        task.append(printUserInfos(falkor, api_key))
         #task.append(printUserInfos("Megata", "0000", api_key))
         #task.append(printUserInfos("Essrog", "TFT", api_key))
         #task.append(printUserInfos("Arestidios", "AAA", api_key))
