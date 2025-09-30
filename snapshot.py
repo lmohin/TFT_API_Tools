@@ -2,6 +2,8 @@ import asyncio
 import aiohttp
 import os
 from dotenv import load_dotenv
+from aiolimiter import AsyncLimiter
+import random
 
 load_dotenv()
 
@@ -37,58 +39,66 @@ class User:
                 self.adjustedLps = -2801
 
 
-async def getPuuid(user, api_key):
+async def getPuuid(user, session, api_key, limiter, retries=1):
     """'user is an instance of User"""
     api_uri = f"https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{user.username}/{user.tag}"
     headers = {
             "X-Riot-Token": api_key
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.get(api_uri, headers=headers) as response:
-            if response.status != 200:
-                print(f"Error: {response.status} ({user.username}#{user.tag})")
-                return None
+    async with limiter, session.get(api_uri, headers=headers) as response:
+        if response.status == 200:
             datas = await response.json()
-            user.puuid = datas["puuid"]
+        status = response.status
+    if status != 200:
+        print(f"Error here: {response.status} ({user.username}#{user.tag})")
+        await asyncio.sleep(2 ** retries + random.random())
+        return await getPuuid(user, session, api_key, limiter, retries + 1)
+    user.puuid = datas["puuid"]
 
-async def getRank(user, session, api_key):
+def romanianConverter(romanNumber):
+    match romanNumber:
+        case "I":
+            rank = 1
+        case "II":
+            rank = 2
+        case "III":
+            rank = 3
+        case "IV":
+            rank = 4
+    return rank
+
+async def getRank(user, session, api_key, limiter, retries = 1):
     if user.puuid == None:
         return
     headers = {
         "X-Riot-Token": api_key
     }
     api_uri = f"https://euw1.api.riotgames.com/tft/league/v1/by-puuid/{user.puuid}"
-    async with session.get(api_uri, headers=headers) as response:
-        if response.status != 200:
-            print(f"Error: {response.status} ({user.username}#{user.tag})")
-            return
-        datas = (await response.json())
-        if len(datas) == 0:
-            print(user.username, "no lp")
-            return
-        rankedDatas = None
-        for tempDatas in datas:
-            if tempDatas['queueType'] == 'RANKED_TFT':
-                rankedDatas = tempDatas
-                break
-        datas = rankedDatas
-        if datas == None:
-            print(user.username, 'no lp')
-            return
-        user.tier = datas['tier']
-        match datas['rank']:
-            case "I":
-                rank = 1
-            case "II":
-                rank = 2
-            case "III":
-                rank = 3
-            case "IV":
-                rank = 4
-        user.rank = rank
-        user.lps = datas['leaguePoints']
-        user.calculateAdjustedLps()       
-        print(user.username + "#" + user.tag, datas['tier'], datas['rank'], datas['leaguePoints'], user.adjustedLps)
+    async with limiter, session.get(api_uri, headers=headers) as response:
+        if response.status == 200:
+            datas = await response.json()
+        status = response.status
+    if status != 200:
+        print(f"Error: {response.status} ({user.username}#{user.tag})")
+        await asyncio.sleep(2 ** retries + random.random())
+        return await getRank(user, session, api_key, limiter, retries + 1)
+    if len(datas) == 0:
+        print(user.username, "no lp")
+        return
+    rankedDatas = None
+    for tempDatas in datas:
+        if tempDatas['queueType'] == 'RANKED_TFT':
+            rankedDatas = tempDatas
+            break
+    datas = rankedDatas
+    if datas == None:
+        print(user.username, 'no lp')
+        return
+    user.tier = datas['tier']
+    user.rank = romanianConverter(datas['rank'])
+    user.lps = datas['leaguePoints']
+    user.calculateAdjustedLps()       
+    print(user.username + "#" + user.tag, datas['tier'], datas['rank'], datas['leaguePoints'], user.adjustedLps)
 
 async def printUserInfos(user, session, api_key):
     headers = {
@@ -116,13 +126,15 @@ async def printUserInfos(user, session, api_key):
             print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"])
 
 async def main():
+    limiter = AsyncLimiter(10, 1)
     api_key = os.environ.get('RIOT_API_KEY')
     if api_key == None:
         print("Error: no riot api key detected")
         return
     task = []
     users = []
-    users.append(User("Falkor", "Genti"))
+    for i in range(40):
+        users.append(User("Falkor", "Genti"))
     users.append(User("Megata", "0000"))
     users.append(User("Yottah", "0000"))
     users.append(User("Arestidios", "AAA"))
@@ -140,14 +152,14 @@ async def main():
     users.append(User("RCS Xperion", "EUW11"))
     users.append(User("QAQ Hecaa", "EUW"))
     users.append(User("Bambilex", "EUW"))
-    for user in users:
-        if user.puuid == None:
-            task.append(getPuuid(user, api_key))
-    await asyncio.gather(*task)
     async with aiohttp.ClientSession() as session:
+        for user in users:
+            if user.puuid == None:
+                task.append(getPuuid(user, session, api_key, limiter))
+        await asyncio.gather(*task)
         task = []
         for user in users:
-            task.append(getRank(user, session, api_key))
+            task.append(getRank(user, session, api_key, limiter))
         await asyncio.gather(*task)
 
 if __name__ == "__main__":
