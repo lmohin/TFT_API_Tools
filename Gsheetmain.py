@@ -12,7 +12,6 @@ def InitGsheetPlayerList(users):
         user_car.append("=IMAGE(\"https://cdn.dak.gg/tft/images2/tft/tiers/"+ str(user.tier).lower() + ".png?set=10\")")
 #user_car.append("=IMAGE(\"https://ddragon.dakgg.net/tactician/"+ str(user.tactician) + ".jpg\")")
         user_car.append(str(user.lps))
-        user_car.append(str(user.adjustedLps))
         users_list.append(user_car)
     print(users_list)
     print(users)
