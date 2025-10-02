@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from aiolimiter import AsyncLimiter
 from user import User
 from riot_api_requests import *
+from Gsheetmain import *
 
 async def main():
     load_dotenv()
@@ -53,7 +54,10 @@ async def main():
         await asyncio.gather(*task)
     users.sort(key=lambda x: x.adjustedLps, reverse=True)
     for user in users:
-        print(user.username + "#" + user.tag, user.adjustedLps)
+        print("This is what I want" + user.username + "#" + user.tag, user.adjustedLps)
+    return users
 
 if __name__ == "__main__":
-      asyncio.run(main())
+    users = asyncio.run(main())
+    print(users)
+    ListtoGsheet(users)

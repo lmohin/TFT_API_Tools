@@ -14,7 +14,8 @@ from google.oauth2 import service_account
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = "1OdyVVdDpCKAAWbN1RSdg59R47MTeuRONXkdrdu72Yrw"
+SAMPLE_SPREADSHEET_ID = "1SrTJ-njm4EDEOp2sZZ8hVzCu5wCweTAiV_nze5vOTS8"
+SAMPLE_SPREADSHEET_ID_TEST ="1OdyVVdDpCKAAWbN1RSdg59R47MTeuRONXkdrdu72Yrw"
 SAMPLE_RANGE_NAME = "A:B"
 
 def get_creds():
@@ -92,7 +93,7 @@ def get_cell_value(SAMPLE_RANGE_NAME):
         #print("Name, Major:")
         for row in values:
             # Print columns A and E, which correspond to indices 0 and 4.
-            print(f"{row[0]}#{row[1]}")
+            print(f"{row}")
         return values
     except HttpError as err:
         print(err)
@@ -100,7 +101,7 @@ def get_cell_value(SAMPLE_RANGE_NAME):
 def write_cells(Range,values):
     creds = get_creds()
     update_values(
-      "1OdyVVdDpCKAAWbN1RSdg59R47MTeuRONXkdrdu72Yrw",
+      SAMPLE_SPREADSHEET_ID,
       Range,
       "USER_ENTERED",
       values,
@@ -108,7 +109,7 @@ def write_cells(Range,values):
   )
 
 def main():
-    values = get_cell_value(SAMPLE_RANGE_NAME)
+    values = get_cell_value("D:E")
     write_cells("G1", values)
     
     
