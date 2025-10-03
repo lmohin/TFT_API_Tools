@@ -27,4 +27,16 @@ def InitTacticianList(users):
         users_list.append(user_car)
     write_cells("B3", users_list)
 
-
+def printScores(users):
+    users_list = []
+    for user in users:
+        user_car = []
+        user_car.append(str(user.username))
+        user_car.append(str(user.tag))
+        user_car.append(str(user.puuid))
+        scores = user.scores
+        for score in scores:
+            user_car.append(str(score) if score else '')
+        user_car.append(str(user.totalScore))
+        users_list.append(user_car)
+    write_cells("Phase 1 : Rondes Suisse (Samedi)!D3", users_list)

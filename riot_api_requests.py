@@ -82,7 +82,7 @@ async def getLastMatchId(user, session, api_key, limiter, retries=0):
     else:
         user.lastMatchId = datas[0]
 
-async def printLastGameInfos(user, session, api_key, limiter, retries=0):
+async def printLastGameInfos(user, users, session, api_key, limiter, retries=0):
     headers = {
         "X-Riot-Token": api_key
     }
@@ -100,7 +100,11 @@ async def printLastGameInfos(user, session, api_key, limiter, retries=0):
     game = datas["info"]["participants"]
     for i in range(len(game)):
         playerInfo = game[i]
-        print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"])
+        player = next((potPlayer for potPlayer in users if playerInfo["riotIdGameName"] == potPlayer.username), None)
+        if player:
+            pos = next(i for i, x in enumerate(player.scores) if not x)
+            player.scores[pos] = 9 - playerInfo["placement"]
+        #print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"])
 
 async def printTactician(user, session, api_key, limiter, retries=0):
     headers = {
