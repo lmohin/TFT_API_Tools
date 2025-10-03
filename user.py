@@ -13,7 +13,7 @@ def romanianConverter(romanNumber):
     return rank
 
 class User:
-    def __init__(self, username, tag, tactician=None, puuid=None):
+    def __init__(self, username, tag, tactician=None, puuid=None, scores=False):
         self.username = username
         self.tag = tag
         self.puuid = puuid
@@ -22,7 +22,8 @@ class User:
         self.rank = None
         self.lps = 0
         self.adjustedLps = 0
-        self.tactician = None
+        self.tactician = tactician
+        self.scores = scores
 
     def calculateAdjustedLps(self):
         rank = romanianConverter(self.rank)

@@ -16,7 +16,7 @@ def InitGsheetPlayerList(users):
     print(users_list)
     print(users)
 
-    write_cells("F3", users_list)
+    write_cells("D3", users_list)
     return
 
 def InitTacticianList(users):
@@ -25,6 +25,6 @@ def InitTacticianList(users):
         user_car = []
         user_car.append("=IMAGE(\"https://ddragon.dakgg.net/tactician/"+ str(user.tactician) + ".jpg\")")
         users_list.append(user_car)
-    write_cells("D3", users_list)
+    write_cells("B3", users_list)
 
 

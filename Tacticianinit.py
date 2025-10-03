@@ -8,7 +8,7 @@ from riot_api_requests import *
 from Gsheetmain import *
 
 async def main():
-    values = get_cell_value("F:G")
+    values = get_cell_value("D:E")
     values.pop(0)
     values.pop(0)
 #     print(values)

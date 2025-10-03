@@ -8,7 +8,8 @@ from riot_api_requests import *
 from Gsheetmain import *
 
 async def main():
-    values = get_cell_value("F:G")
+    #values = get_cell_value("Phase 1 : Rondes Suisse (Samedi)!D:M")
+    values = get_cell_value("D:E")
     values.pop(0)
     values.pop(0)
 #     print(values)
@@ -24,8 +25,15 @@ async def main():
     task = []
     users = []
     for value in values:
+        scores = {}
+        #scores[0] = value[2] if value[2] else 0
+        #scores[1] = value[3] if value[3] else 0
+        #scores[2] = value[4] if value[4] else 0
+        #scores[3] = value[5] if value[5] else 0
+        #scores[4] = value[6] if value[6] else 0
+        #scores[5] = value [7] if value[7] else 0
         print(value)
-        users.append(User(value[0], value[1]))
+        users.append(User(value[0], value[1], scores=scores))
     async with aiohttp.ClientSession() as session:
         for user in users:
             if user.puuid == None:
