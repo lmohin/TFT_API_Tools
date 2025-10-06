@@ -37,6 +37,7 @@ def printScores(users):
         scores = user.scores
         for score in scores:
             user_car.append(str(score) if score else '')
-        user_car.append(str(user.totalScore))
+        #user_car.append(str(user.totalScore))
         users_list.append(user_car)
+        print("print final user :", user_car)
     write_cells("Phase 1 : Rondes Suisse (Samedi)!D3", users_list)

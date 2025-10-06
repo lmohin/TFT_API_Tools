@@ -8,7 +8,7 @@ from riot_api_requests import *
 from Gsheetmain import *
 
 async def main():
-    values = get_cell_value("Phase 1 : Rondes Suisse (Samedi)!D:N")
+    values = get_cell_value("Phase 1 : Rondes Suisse (Samedi)!D:L")
     values.pop(0)
     values.pop(0)
     
@@ -25,12 +25,8 @@ async def main():
         if value[0] == "":
             continue
         scores = []
-        scores.append(int(value[3]) if value[3] else 0)
-        scores.append(int(value[4]) if value[4] else 0)
-        scores.append(int(value[5]) if value[5] else 0)
-        scores.append(int(value[6]) if value[6] else 0)
-        scores.append(int(value[7]) if value[7] else 0)
-        scores.append(int(value[8]) if value[8] else 0)
+        for i in range(len(value)-3):
+             scores.append(int(value[i+3]))
         users.append(User(value[0], value[1], scores=scores))
     for user in users:
         print(user.username, user.totalScore)
@@ -50,12 +46,12 @@ async def main():
         i = 0
         for user in users:
             if i % 8 == 0:
-                task.append(printLastGameInfos(user, users, session, api_key, limiter))
+                task.append(printLastGameInfos_Loic(user, users, session, api_key, limiter))
             i += 1
         await asyncio.gather(*task)
     for user in users:
         user.calculateTotalScore()
-    users.sort(key=lambda x: x.totalScore, reverse=True)
+    #users.sort(key=lambda x: x.totalScore, reverse=True)
     for user in users:
         print("This is what I want" + user.username + "#" + user.tag, user.totalScore)
     printScores(users)
@@ -63,3 +59,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+

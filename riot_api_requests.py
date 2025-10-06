@@ -82,6 +82,32 @@ async def getLastMatchId(user, session, api_key, limiter, retries=0):
     else:
         user.lastMatchId = datas[0]
 
+
+async def printLastGameInfos_Loic(user, users, session, api_key, limiter, retries=0):
+    headers = {
+        "X-Riot-Token": api_key
+    }
+    if user.lastMatchId == None:
+        return
+    api_uri = f"https://europe.api.riotgames.com/tft/match/v1/matches/{user.lastMatchId}"
+    async with limiter, session.get(api_uri, headers=headers) as response:
+        if response.status == 200:
+            datas = await response.json()
+        status = response.status
+    if status != 200:
+        print(f"Error match: {response.status} ({user.username}#{user.tag})")
+        await asyncio.sleep(2 ** retries + random.random())
+        return await printLastGameInfos(user, session, api_key, limiter, retries + 1)
+    game = datas["info"]["participants"]
+    for i in range(len(game)):
+        playerInfo = game[i]
+        player = next((potPlayer for potPlayer in users if playerInfo["riotIdGameName"] == potPlayer.username), None)
+        if player != None:
+            print("Player  found : ", player.username)
+        if player:
+            player.scores.append(9 - playerInfo["placement"])
+        print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"])
+
 async def printLastGameInfos(user, users, session, api_key, limiter, retries=0):
     headers = {
         "X-Riot-Token": api_key
@@ -104,7 +130,7 @@ async def printLastGameInfos(user, users, session, api_key, limiter, retries=0):
         if player:
             pos = next(i for i, x in enumerate(player.scores) if not x)
             player.scores[pos] = 9 - playerInfo["placement"]
-        #print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"])
+        print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"])
 
 async def printTactician(user, session, api_key, limiter, retries=0):
     headers = {

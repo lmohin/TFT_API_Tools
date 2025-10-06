@@ -13,7 +13,7 @@ def romanianConverter(romanNumber):
     return rank
 
 class User:
-    def __init__(self, username, tag, tactician=None, puuid=None, scores=[]):
+    def __init__(self, username, tag, tactician=None, puuid=None):
         self.username = username
         self.tag = tag
         self.puuid = puuid
@@ -22,13 +22,7 @@ class User:
         self.rank = None
         self.lps = 0
         self.adjustedLps = 0
-        self.tactician = tactician
-        self.scores = scores
-        self.totalScore = sum(self.scores)
-
-    def calculateTotalScore(self):
-        self.totalScore = sum(self.scores)
-        print("Loïc Test :" + self.username, self.totalScore , self.scores)
+        self.tactician = "5897ad9f-4665-4372-8f3e-6c878adb8918"
 
     def calculateAdjustedLps(self):
         rank = romanianConverter(self.rank)
