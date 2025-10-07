@@ -19,6 +19,17 @@ def InitGsheetPlayerList(users):
     write_cells("D3", users_list)
     return
 
+def InitGsheetPlayerList2(users):
+    users_list = []
+    for user in users:
+        user_car = []
+        user_car.append(str(user.username))
+        user_car.append(str(user.tag))
+        user_car.append(str(user.puuid))
+        users_list.append(user_car)
+    write_cells("Phase 1 : Rondes Suisse (Samedi)!D3", users_list)
+    return
+
 def InitTacticianList(users):
     users_list = []
     for user in users:

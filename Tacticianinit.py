@@ -7,14 +7,9 @@ from user import User
 from riot_api_requests import *
 from Gsheetmain import *
 
-async def main():
-    values = get_cell_value("D:E")
-    values.pop(0)
-    values.pop(0)
-#     print(values)
-#     return values
-    
-    
+async def updateTactician(columns):
+    values = get_cell_value(columns)
+    values = values[2:] 
     load_dotenv()
     limiter = AsyncLimiter(10, 1)
     api_key = os.environ.get('RIOT_API_KEY')
@@ -25,7 +20,9 @@ async def main():
     users = []
     for value in values:
         print(value)
-        users.append(User(value[0], value[1]))
+        if value[2] == "None":
+            value[2] = None
+        users.append(User(value[0], value[1], puuid = value[2]))
     async with aiohttp.ClientSession() as session:
         for user in users:
             if user.puuid == None:
@@ -51,5 +48,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(updateTactician("D:F"))
 
