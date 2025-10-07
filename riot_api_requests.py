@@ -25,14 +25,17 @@ async def manageRankException(user):
     if user.username == "RCS Xperion":
         user.tier = "Pro Circuit"
         user.adjustedLps = 4000
+        user.lps = '/'
         return True
-    if user.username == "MIH Tarteman":
+    if user.username == "MIH TarteMan":
         user.tier = "Pro Circuit"
         user.adjustedLps = 3900
+        user.lps = '/'
         return True
     if user.username == "M8 Jedusor":
         user.tier = "Pro Circuit"
         user.adjustedLps = 3950
+        user.lps = '/'
         return True
     return False
 

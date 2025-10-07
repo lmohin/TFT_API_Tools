@@ -7,7 +7,7 @@ from user import User
 from riot_api_requests import *
 from Gsheetmain import *
 
-async def main():
+async def Scores():
     values = get_cell_value("Phase 1 : Rondes Suisse (Samedi)!D:L")
     values.pop(0)
     values.pop(0)
@@ -58,5 +58,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(Scores())
 

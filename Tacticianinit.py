@@ -7,8 +7,9 @@ from user import User
 from riot_api_requests import *
 from Gsheetmain import *
 
-async def updateTactician(columns):
-    values = get_cell_value(columns)
+async def updateTactician(columns,page,case):
+    
+    values = get_cell_value(f"{page}!{columns}")
     values = values[2:] 
     load_dotenv()
     limiter = AsyncLimiter(10, 1)
@@ -44,9 +45,9 @@ async def updateTactician(columns):
     for user in users:
         print("This is what I want" + user.username + "#" + user.tag, user.adjustedLps)
     print(users)
-    InitTacticianList(users)
+    InitTacticianList(users, f"{page}!{case}3")
 
 
 if __name__ == "__main__":
-    asyncio.run(updateTactician("D:F"))
+    asyncio.run(updateTactician("D:F", "Liste Joueurs", "B"))
 

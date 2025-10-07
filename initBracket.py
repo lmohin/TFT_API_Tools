@@ -19,7 +19,7 @@ def initBracket(lobbyNumber):
         print("This is what I want" + user.username + "#" + user.tag, user.tactician, user.puuid)
     print(users)
     i = 0
-    ascend = 1
+    ascend = -1
     for user in users:
         if ascend > 0:
             user.lobby = i % (lobbyNumber) + 1

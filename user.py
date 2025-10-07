@@ -29,6 +29,25 @@ class User:
 
     def calculateTotalScore(self):
         self.totalScore = sum(self.scores)
+        top4 = 0
+        top3 = 0
+        top2 = 0
+        top1 = 0
+        for score in self.scores:
+            top4 += 1
+            match score:
+                case 1:
+                    top1 += 1
+                case 2:
+                    top2 += 1
+                case 3:
+                    top3 += 1
+                case 4:
+                    pass
+                case _:
+                    top4 -= 1
+        self.totalScore += top4*0.1 + top1*0.01 + top2*0.001 + top3*0.0001
+                
         print("Loïc Test :" + self.username, self.totalScore , self.scores)
 
     def calculateAdjustedLps(self):

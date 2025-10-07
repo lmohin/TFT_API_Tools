@@ -55,7 +55,7 @@ async def main():
         await asyncio.gather(*task)
     for user in users:
         user.calculateTotalScore()
-    users.sort(key=lambda x: x.totalScore, reverse=True)
+    #users.sort(key=lambda x: x.totalScore, reverse=True)
     for user in users:
         print("This is what I want" + user.username + "#" + user.tag, user.totalScore)
     printScores(users)
