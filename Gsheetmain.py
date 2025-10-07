@@ -13,11 +13,8 @@ def InitGsheetPlayerList(users):
             user_car.append("=IMAGE(\"https://liquipedia.net/commons/images/thumb/7/77/TFT_Regional_Finals_icon_darkmode.png/42px-TFT_Regional_Finals_icon_darkmode.png\")")
         else:
             user_car.append("=IMAGE(\"https://cdn.dak.gg/tft/images2/tft/tiers/"+ str(user.tier).lower() + ".png?set=10\")")
-#user_car.append("=IMAGE(\"https://ddragon.dakgg.net/tactician/"+ str(user.tactician) + ".jpg\")")
         user_car.append(str(user.lps))
         users_list.append(user_car)
-    print(users_list)
-    print(users)
 
     write_cells("D3", users_list)
     return
@@ -51,7 +48,5 @@ def printScores(users):
         scores = user.scores
         for score in scores:
             user_car.append(str(score) if score else '')
-        #user_car.append(str(user.totalScore))
         users_list.append(user_car)
-        print("print final user :", user_car)
     write_cells("Phase 1 : Rondes Suisse (Samedi)!D3", users_list)

@@ -40,11 +40,7 @@ async def updateTactician(columns,page,case):
         for user in users:
             task.append(printTactician(user, session, api_key, limiter))
         await asyncio.gather(*task)
-    for user in users:
-        print("This is what I want" + user.username + "#" + user.tag, user.adjustedLps)
-    print(users)
     InitTacticianList(users, f"{page}!{case}3")
-
 
 if __name__ == "__main__":
     asyncio.run(updateTactician("E:G", "Phase 1 : Rondes Suisse (Samedi)", "D"))

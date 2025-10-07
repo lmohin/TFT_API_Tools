@@ -81,7 +81,6 @@ async def getRank(user, session, api_key, limiter, retries=0):
     user.rank = datas['rank']
     user.lps = datas['leaguePoints']
     user.calculateAdjustedLps()       
-    print(user.username + "#" + user.tag, datas['tier'], datas['rank'], datas['leaguePoints'], user.adjustedLps)
 
 async def getLastMatchId(user, session, api_key, limiter, retries=0):
     headers = {
@@ -131,7 +130,6 @@ async def printLastGameInfos_Loic(user, users, session, api_key, limiter, retrie
             print("Player  found : ", player.username)
         if player:
             player.scores.append(9 - playerInfo["placement"])
-        print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"])
 
 async def printLastGameInfos(user, users, session, api_key, limiter, retries=0):
     headers = {
@@ -155,7 +153,6 @@ async def printLastGameInfos(user, users, session, api_key, limiter, retries=0):
         if player:
             pos = next(i for i, x in enumerate(player.scores) if not x)
             player.scores[pos] = 9 - playerInfo["placement"]
-        print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"])
 
 async def printTactician(user, session, api_key, limiter, retries=0):
     headers = {
@@ -174,7 +171,6 @@ async def printTactician(user, session, api_key, limiter, retries=0):
         return await printTactician(user, session, api_key, limiter, retries + 1)
     game = datas["info"]["participants"]
     for i in range(len(game)):
-
         playerInfo = game[i]
         if playerInfo["riotIdGameName"].lower() == user.username.lower() and playerInfo["riotIdTagline"].lower() == user.tag.lower():
             user.tactician = playerInfo["companion"]["content_ID"]

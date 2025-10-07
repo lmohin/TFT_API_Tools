@@ -48,8 +48,6 @@ class User:
                     top4 -= 1
         self.totalScore += top4*0.1 + top1*0.01 + top2*0.001 + top3*0.0001
                 
-        print("Loïc Test :" + self.username, self.totalScore , self.scores)
-
     def calculateAdjustedLps(self):
         rank = romanianConverter(self.rank)
         match self.tier:
