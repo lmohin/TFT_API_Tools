@@ -29,7 +29,6 @@ def initBracket(lobbyNumber):
             ascend *= -1
         i += 1
     users.sort(key=lambda x: x.lobby, reverse=False)
-    print(len(users))
     InitGsheetPlayerList2(users)
 
 if __name__ == "__main__":

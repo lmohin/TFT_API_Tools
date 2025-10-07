@@ -10,7 +10,7 @@ from Gsheetmain import *
 async def updateTactician(columns,page,case):
     
     values = get_cell_value(f"{page}!{columns}")
-    values = values[2:] 
+    values = values[2:]
     load_dotenv()
     limiter = AsyncLimiter(10, 1)
     api_key = os.environ.get('RIOT_API_KEY')
@@ -20,19 +20,18 @@ async def updateTactician(columns,page,case):
     task = []
     users = []
     for value in values:
-        print(value)
-        if value[2] == "None":
-            value[2] = None
-        users.append(User(value[0], value[1], puuid = value[2]))
+        if len(value) == 3:
+            puuid = value[2]
+        else:
+            puuid = None
+        if puuid == "None":
+            puuid = None
+        users.append(User(value[0], value[1], puuid = puuid))
     async with aiohttp.ClientSession() as session:
         for user in users:
             if user.puuid == None:
                 task.append(getPuuid(user, session, api_key, limiter))
         await asyncio.gather(*task)
-#         task = []
-#         for user in users:
-#             task.append(getRank(user, session, api_key, limiter))
-#         await asyncio.gather(*task)
         task = []
         for user in users:
             task.append(getLastMatchId(user, session, api_key, limiter))
@@ -41,7 +40,6 @@ async def updateTactician(columns,page,case):
         for user in users:
             task.append(printTactician(user, session, api_key, limiter))
         await asyncio.gather(*task)
-    #users.sort(key=lambda x: x.adjustedLps, reverse=True)
     for user in users:
         print("This is what I want" + user.username + "#" + user.tag, user.adjustedLps)
     print(users)
@@ -49,5 +47,5 @@ async def updateTactician(columns,page,case):
 
 
 if __name__ == "__main__":
-    asyncio.run(updateTactician("D:F", "Liste Joueurs", "B"))
+    asyncio.run(updateTactician("E:G", "Phase 1 : Rondes Suisse (Samedi)", "D"))
 

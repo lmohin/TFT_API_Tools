@@ -30,14 +30,14 @@ def InitGsheetPlayerList2(users):
         user_car.append(str(user.tag))
         user_car.append(str(user.puuid))
         users_list.append(user_car)
-    write_cells("Phase 1 : Rondes Suisse (Samedi)!D3", users_list)
+    write_cells("Phase 1 : Rondes Suisse (Samedi)!E3", users_list)
     return
 
 def InitTacticianList(users,case):
     users_list = []
     for user in users:
         user_car = []
-        user_car.append("=IMAGE(\"https://ddragon.dakgg.net/tactician/"+ str(user.tactician) + ".jpg\")")
+        user_car.append("https://ddragon.dakgg.net/tactician/"+ str(user.tactician) + ".jpg")
         users_list.append(user_car)
     write_cells(case, users_list)
 

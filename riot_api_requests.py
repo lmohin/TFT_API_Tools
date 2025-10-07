@@ -54,10 +54,13 @@ async def getRank(user, session, api_key, limiter, retries=0):
         if response.status == 200:
             datas = await response.json()
         status = response.status
-    if status != 200:
+    if status == 429:
         print(f"Error: {response.status} ({user.username}#{user.tag})")
         await asyncio.sleep(2 ** retries + random.random())
         return await getRank(user, session, api_key, limiter, retries + 1)
+    elif status != 200:
+        print("ERROR GETRANK")
+        return
     if len(datas) == 0:
         print(user.username, "no lp")
         user.calculateAdjustedLps()
@@ -91,10 +94,13 @@ async def getLastMatchId(user, session, api_key, limiter, retries=0):
         if response.status == 200:
             datas = await response.json()
         status = response.status
-    if status != 200:
-        print("error, retrying")
+    if status == 429:
+        print("error, retrying lastmatchid")
         await asyncio.sleep(2 ** retries + random.random())
         return await getLastMatchId(user, session, api_key, limiter, retries + 1)
+    elif status != 200:
+        print("error lastmatchid", status, api_uri)
+        return
     if len(datas) == 0:
         print(user.username + "#" + user.tag, "no game found")
         user.lastMatchId = None
