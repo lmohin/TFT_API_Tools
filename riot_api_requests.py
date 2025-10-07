@@ -21,11 +21,27 @@ async def getPuuid(user, session, api_key, limiter, retries=0):
         return
     user.puuid = datas["puuid"]
 
+async def manageRankException(user):
+    if user.username == "RCS Xperion":
+        user.tier = "Pro Circuit"
+        user.adjustedLps = 4000
+        return True
+    if user.username == "MIH Tarteman":
+        user.tier = "Pro Circuit"
+        user.adjustedLps = 3900
+        return True
+    if user.username == "M8 Jedusor":
+        user.tier = "Pro Circuit"
+        user.adjustedLps = 3950
+        return True
+    return False
 
 async def getRank(user, session, api_key, limiter, retries=0):
     if user.puuid == None:
         user.calculateAdjustedLps()
         user.tier = "unranked"
+        return
+    if await manageRankException(user):
         return
     headers = {
         "X-Riot-Token": api_key
@@ -67,7 +83,7 @@ async def getLastMatchId(user, session, api_key, limiter, retries=0):
     }
     if user.puuid == None:
         return
-    api_uri = f"https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/{user.puuid}/ids"
+    api_uri = f"https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/{user.puuid}/ids?count=1"
     async with limiter, session.get(api_uri, headers=headers) as response:
         if response.status == 200:
             datas = await response.json()
@@ -120,11 +136,10 @@ async def printTactician(user, session, api_key, limiter, retries=0):
     if status != 200:
         print(f"Error match: {response.status} ({user.username}#{user.tag})")
         await asyncio.sleep(2 ** retries + random.random())
-        return await printLastGameInfos(user, session, api_key, limiter, retries + 1)
+        return await printTactician(user, session, api_key, limiter, retries + 1)
     game = datas["info"]["participants"]
     for i in range(len(game)):
 
         playerInfo = game[i]
         if playerInfo["riotIdGameName"].lower() == user.username.lower() and playerInfo["riotIdTagline"].lower() == user.tag.lower():
             user.tactician = playerInfo["companion"]["content_ID"]
-            print(playerInfo["riotIdGameName"], playerInfo["riotIdTagline"], playerInfo["placement"], 9 - playerInfo["placement"], playerInfo["companion"]["content_ID"])
