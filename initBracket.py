@@ -8,10 +8,11 @@ from riot_api_requests import *
 from Gsheetmain import *
 
 def initBracket(lobbyNumber):
-    values = get_cell_value("B:F")
+    values = get_cell_value("B:J")
     values.pop(0)
     values.pop(0)
     users = []
+    values = [x for x in values if x[-1] == "v"]
     for value in values:
         users.append(User(value[2], value[3], tactician = value[0], puuid = value[4]))
     i = 0

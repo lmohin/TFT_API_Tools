@@ -66,7 +66,8 @@ async def Scores():
                     if "TFT15_" + unit1.name == playedUnit["character_id"]:
                         unit1.addScore(int(player["placement"]))
     for unit1 in units1:
-        unit1.calculateStats(3)
+        unit1.calculateStats(6)
+    units1.sort(key=lambda x: x.pickRate, reverse=True)
     printUnits(units1)
     printScores(users)
 
