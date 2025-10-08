@@ -42,6 +42,7 @@ def printScores(users):
     users_list = []
     for user in users:
         user_car = []
+        user_car.append(str(user.tactician))
         user_car.append(str(user.username))
         user_car.append(str(user.tag))
         user_car.append(str(user.puuid))

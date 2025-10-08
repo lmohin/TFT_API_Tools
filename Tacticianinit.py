@@ -26,7 +26,7 @@ async def updateTactician(columns,page,case):
             puuid = None
         if puuid == "None":
             puuid = None
-        users.append(User(value[0], value[1], puuid = puuid))
+        users.append(User(value[0], value[1]))
     async with aiohttp.ClientSession() as session:
         for user in users:
             if user.puuid == None:

@@ -8,10 +8,10 @@ from riot_api_requests import *
 from Gsheetmain import *
 
 async def Scores():
-    values = get_cell_value("Phase 1 : Rondes Suisse (Samedi)!D:L")
-    values.pop(0)
-    values.pop(0)
-    
+    cost1 = get_cell_value("Units Stats!B:I")
+    cost1 = cost1[2:]
+    values = get_cell_value("Phase 1 : Rondes Suisse (Samedi)!D:M")
+    values = values[2:]
     load_dotenv()
     limiter = AsyncLimiter(10, 1)
     api_key = os.environ.get('RIOT_API_KEY')
@@ -25,9 +25,9 @@ async def Scores():
         if value[0] == "":
             continue
         scores = []
-        for i in range(len(value)-3):
-             scores.append(int(value[i+3]))
-        users.append(User(value[0], value[1], scores=scores))
+        for i in range(len(value)-4):
+             scores.append(int(value[i+4]))
+        users.append(User(value[1], value[2], tactician = value[0], puuid = value[3], scores=scores))
     for user in users:
         print(user.username, user.totalScore)
     async with aiohttp.ClientSession() as session:
@@ -51,7 +51,7 @@ async def Scores():
         await asyncio.gather(*task)
     for user in users:
         user.calculateTotalScore()
-    #users.sort(key=lambda x: x.totalScore, reverse=True)
+    users.sort(key=lambda x: x.totalScore, reverse=True)
     for user in users:
         print("This is what I want" + user.username + "#" + user.tag, user.totalScore)
     printScores(users)
