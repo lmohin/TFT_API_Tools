@@ -6,10 +6,14 @@ from aiolimiter import AsyncLimiter
 from user import User
 from riot_api_requests import *
 from Gsheetmain import *
+from unit import Unit
 
 async def Scores():
     cost1 = get_cell_value("Units Stats!B:I")
     cost1 = cost1[2:]
+    units1 = []
+    for unit1 in cost1:
+        units1.append(Unit(unit1[1], unit1[0], unit1[3], unit1[5], unit1[7]))
     values = get_cell_value("Phase 1 : Rondes Suisse (Samedi)!D:M")
     values = values[2:]
     load_dotenv()
@@ -21,7 +25,6 @@ async def Scores():
     task = []
     users = []
     for value in values:
-        print("Test :" ,value)
         if value[0] == "":
             continue
         scores = []
@@ -44,16 +47,27 @@ async def Scores():
         await asyncio.gather(*task)
         task = []
         i = 0
+        games = []
         for user in users:
             if i % 8 == 0:
-                task.append(printLastGameInfos_Loic(user, users, session, api_key, limiter))
+                print(user.username, "coucou")
+                task.append(printLastGameInfos_Loic(user, users, session, api_key, limiter, games))
             i += 1
         await asyncio.gather(*task)
     for user in users:
         user.calculateTotalScore()
     users.sort(key=lambda x: x.totalScore, reverse=True)
-    for user in users:
-        print("This is what I want" + user.username + "#" + user.tag, user.totalScore)
+    for game in games:
+        for player in game:
+            if player["puuid"] == "BOT":
+                break
+            for playedUnit in player["units"]:
+                for unit1 in units1:
+                    if "TFT15_" + unit1.name == playedUnit["character_id"]:
+                        unit1.addScore(int(player["placement"]))
+    for unit1 in units1:
+        unit1.calculateStats(3)
+    printUnits(units1)
     printScores(users)
 
 

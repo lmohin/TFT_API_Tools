@@ -106,8 +106,7 @@ async def getLastMatchId(user, session, api_key, limiter, retries=0):
     else:
         user.lastMatchId = datas[0]
 
-
-async def printLastGameInfos_Loic(user, users, session, api_key, limiter, retries=0):
+async def printLastGameInfos_Loic(user, users, session, api_key, limiter, games, retries=0):
     headers = {
         "X-Riot-Token": api_key
     }
@@ -123,9 +122,10 @@ async def printLastGameInfos_Loic(user, users, session, api_key, limiter, retrie
         await asyncio.sleep(2 ** retries + random.random())
         return await printLastGameInfos(user, session, api_key, limiter, retries + 1)
     game = datas["info"]["participants"]
+    games.append(game)
     for i in range(len(game)):
         playerInfo = game[i]
-        player = next((potPlayer for potPlayer in users if playerInfo["riotIdGameName"] == potPlayer.username), None)
+        player = next((potPlayer for potPlayer in users if playerInfo["riotIdGameName"].lower() == potPlayer.username.lower()), None)
         if player != None:
             print("Player  found : ", player.username)
         if player:

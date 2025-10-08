@@ -51,3 +51,19 @@ def printScores(users):
             user_car.append(str(score) if score else '')
         users_list.append(user_car)
     write_cells("Phase 1 : Rondes Suisse (Samedi)!D3", users_list)
+
+def printUnits(units):
+    units_list = []
+    for unit in units:
+        unit_car = []
+        print(float(unit.pickRate), unit.name)
+        unit_car.append(str(unit.image))
+        unit_car.append(str(unit.name))
+        unit_car.append(str(unit.pickRate) + "%")
+        unit_car.append(str(unit.pick))
+        unit_car.append(str(unit.winRate) + "%")
+        unit_car.append(str(unit.win))
+        unit_car.append(str(unit.average))
+        unit_car.append(str(unit.totalScore))
+        units_list.append(unit_car)
+    write_cells("Units Stats!B3", units_list)
