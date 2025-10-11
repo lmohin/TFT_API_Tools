@@ -91,9 +91,9 @@ def get_cell_value(SAMPLE_RANGE_NAME):
             return
 
         #print("Name, Major:")
-        for row in values:
+        #for row in values:
             # Print columns A and E, which correspond to indices 0 and 4.
-            print(f"{row}")
+         #   print(f"{row}")
         return values
     except HttpError as err:
         print(err)
