@@ -3,7 +3,7 @@ import tkinter as tk
 import tkinter.simpledialog as tkd
 import asyncio
 from Snapshot import *
-from Scores_Loic import *
+from Scores import *
 from Tacticianinit import *
 import tk_async_execute as tae
 

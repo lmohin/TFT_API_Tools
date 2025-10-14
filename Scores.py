@@ -63,7 +63,7 @@ async def Scores():
         games = []
         for user in users:
             if i % 8 == 0:
-                task.append(printLastGameInfos_Loic(user, users, session, api_key, limiter, games))
+                task.append(printLastGameInfos_L(user, users, session, api_key, limiter, games))
             i += 1
         await asyncio.gather(*task)
     for user in users:

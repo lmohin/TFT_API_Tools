@@ -106,7 +106,7 @@ async def getLastMatchId(user, session, api_key, limiter, retries=0):
     else:
         user.lastMatchId = datas[0]
 
-async def printLastGameInfos_Loic(user, users, session, api_key, limiter, games, retries=0):
+async def printLastGameInfos_L(user, users, session, api_key, limiter, games, retries=0):
     headers = {
         "X-Riot-Token": api_key
     }
@@ -120,7 +120,7 @@ async def printLastGameInfos_Loic(user, users, session, api_key, limiter, games,
     if status != 200:
         print(f"Error match: {response.status} ({user.username}#{user.tag})")
         await asyncio.sleep(2 ** retries + random.random())
-        return await printLastGameInfos(user, session, api_key, limiter, retries + 1)
+        return await printLastGameInfos_L(user, session, api_key, limiter, retries + 1)
     game = datas["info"]["participants"]
     games.append(game)
     for i in range(len(game)):
