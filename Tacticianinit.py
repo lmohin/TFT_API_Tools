@@ -43,5 +43,5 @@ async def updateTactician(columns,page,case):
     InitTacticianList(users, f"{page}!{case}3")
 
 if __name__ == "__main__":
-    asyncio.run(updateTactician("E:G", "Phase 1 : Rondes Suisse (Samedi)", "D"))
+    asyncio.run(updateTactician("E:G", "Liste Joueurs", "B"))
 

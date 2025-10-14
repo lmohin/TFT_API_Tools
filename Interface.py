@@ -20,12 +20,14 @@ def Score_call():
 def TacticianInit_call():
     page = tkd.askinteger("test","Quelle page?")
     if page == 1:
+        plage = "D:F"
         page = "Liste Joueurs"
         case = "B"
     else:
+        plage = "E:G"
         page = "Phase 1 : Rondes Suisse (Samedi)"
-        case = "C"
-    tae.async_execute(updateTactician("D:F", page, case), wait=True, visible=True, pop_up=True, callback=None, master=root)
+        case = "D"
+    tae.async_execute(updateTactician(plage, page, case), wait=True, visible=True, pop_up=True, callback=None, master=root)
 
 
 if __name__ == "__main__":

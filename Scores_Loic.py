@@ -15,7 +15,7 @@ async def getUnitsValues(sheet):
     units = []
     print(cost)
     for unit in cost:
-        units.append(Unit(unit[1], unit[0], unit[3], unit[5], unit[7]))
+        units.append(Unit(unit[1],unit[0],unit[3], unit[5], unit[7]))
     return units
 
 async def Scores():
@@ -34,9 +34,9 @@ async def Scores():
         return
     task = []
     users = []
-    nbr_rounds = 1
     for value in values:
         scores = []
+        nbr_rounds = 1
         for i in range(len(value)-4):
              scores.append(int(value[i+4]))
              nbr_rounds += 1
@@ -45,6 +45,7 @@ async def Scores():
             puuid = value[3]
         print(value)
         users.append(User(value[1], value[2], tactician = value[0], puuid = puuid, scores=scores))
+
     async with aiohttp.ClientSession() as session:
         for user in users:
             if user.puuid == None:
@@ -90,7 +91,9 @@ async def Scores():
                 for unit5 in units5:
                     if ("TFT15_" + unit5.name).lower() == playedUnit["character_id"].lower():
                         unit5.addScore(int(player["placement"]))
-    nbr_games = nbr_rounds * (len(users) // 8)
+    nbr_games = nbr_rounds * ((len(users) // 8)) - 1
+    if len(users)%8 != 0:
+        nbr_games += nbr_rounds
     for u1 in units1:
         u1.calculateStats(nbr_games)
     for u2 in units2:
@@ -117,3 +120,4 @@ async def Scores():
 if __name__ == "__main__":
     asyncio.run(Scores())
 
+        

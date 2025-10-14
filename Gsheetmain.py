@@ -35,6 +35,7 @@ def InitTacticianList(users,case):
     for user in users:
         user_car = []
         user_car.append("https://ddragon.dakgg.net/tactician/"+ str(user.tactician) + ".jpg")
+        print(user.puuid)
         users_list.append(user_car)
     write_cells(case, users_list)
 
@@ -50,7 +51,7 @@ def printScores(users):
         for score in scores:
             user_car.append(str(score) if score else '')
         users_list.append(user_car)
-    write_cells("Phase 1 : Rondes Suisse (Samedi)!D3", users_list)
+    write_cells("Phase 2 : Finale (Dimanche)!D3", users_list)
 
 def printUnits(units, page):
     units_list = []
@@ -58,7 +59,7 @@ def printUnits(units, page):
         unit_car = []
         unit_car.append(str(unit.image))
         unit_car.append(str(unit.name))
-        unit_car.append(str(unit.pickRate) + "%")
+        unit_car.append(str(unit.pickRate))
         unit_car.append(str(unit.pick))
         unit_car.append(str(unit.winRate) + "%")
         unit_car.append(str(unit.win))

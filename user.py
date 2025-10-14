@@ -36,13 +36,13 @@ class User:
         for score in self.scores:
             top4 += 1
             match score:
-                case 1:
+                case 8:
                     top1 += 1
-                case 2:
+                case 7:
                     top2 += 1
-                case 3:
+                case 6:
                     top3 += 1
-                case 4:
+                case 5:
                     pass
                 case _:
                     top4 -= 1

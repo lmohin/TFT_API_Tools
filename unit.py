@@ -12,7 +12,7 @@ class Unit:
     def calculateStats(self, nbrGames):
         if self.pick == 0:
             return
-        self.pickRate = round(self.pick / nbrGames * 100, 1)
+        self.pickRate = round(self.pick / nbrGames, 1)
         self.winRate = round(self.win / self.pick * 100, 1)
         self.average = round(self.totalScore / self.pick, 1)
 
