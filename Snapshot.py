@@ -8,7 +8,7 @@ from riot_api_requests import *
 from Gsheetmain import *
 
 async def Snapshot():
-    values = get_cell_value("D:E")
+    values = get_cell_value("Liste Joueurs!D:E")
     values.pop(0)
     values.pop(0)
     load_dotenv()
@@ -33,6 +33,8 @@ async def Snapshot():
         await asyncio.gather(*task)
         task = []
     users.sort(key=lambda x: x.adjustedLps, reverse=True)
+    for user in users:
+        print("name : " , user.username)
     InitGsheetPlayerList(users)
 
 if __name__ == "__main__":

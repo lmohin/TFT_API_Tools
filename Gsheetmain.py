@@ -1,5 +1,6 @@
 from quickstart import *
 from user import User
+from Interface_Validation import *
 
 def InitGsheetPlayerList(users):
     users_list = []
@@ -15,8 +16,8 @@ def InitGsheetPlayerList(users):
             user_car.append("=IMAGE(\"https://cdn.dak.gg/tft/images2/tft/tiers/"+ str(user.tier).lower() + ".png?set=10\")")
         user_car.append(str(user.lps))
         users_list.append(user_car)
-
-    write_cells("D3", users_list)
+    Table("Liste Joueurs!D3",users_list)
+    #write_cells("Liste Joueurs!D3", users_list)
     return
 
 def InitGsheetPlayerList2(users):
