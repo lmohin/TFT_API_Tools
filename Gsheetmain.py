@@ -16,7 +16,7 @@ def InitGsheetPlayerList(users):
             user_car.append("=IMAGE(\"https://cdn.dak.gg/tft/images2/tft/tiers/"+ str(user.tier).lower() + ".png?set=10\")")
         user_car.append(str(user.lps))
         users_list.append(user_car)
-    Table("Liste Joueurs!D3",users_list)
+    Preview("Liste Joueurs!D3",users_list)
     #write_cells("Liste Joueurs!D3", users_list)
     return
 
@@ -28,7 +28,7 @@ def InitGsheetPlayerList2(users):
         user_car.append(str(user.tag))
         user_car.append(str(user.puuid))
         users_list.append(user_car)
-    write_cells("Phase 1 : Rondes Suisse (Samedi)!E3", users_list)
+    Preview("Phase 1 : Rondes Suisse (Samedi)!E3", users_list)
     return
 
 def InitTacticianList(users,case):
@@ -38,7 +38,7 @@ def InitTacticianList(users,case):
         user_car.append("https://ddragon.dakgg.net/tactician/"+ str(user.tactician) + ".jpg")
         print(user.puuid)
         users_list.append(user_car)
-    write_cells(case, users_list)
+    Preview(case, users_list)
 
 def printScores(users):
     users_list = []
@@ -52,7 +52,7 @@ def printScores(users):
         for score in scores:
             user_car.append(str(score) if score else '')
         users_list.append(user_car)
-    write_cells("Phase 2 : Finale (Dimanche)!D3", users_list)
+    Preview("Phase 2 : Finale (Dimanche)!D3", users_list)
 
 def printUnits(units, page):
     units_list = []
@@ -67,4 +67,4 @@ def printUnits(units, page):
         unit_car.append(str(unit.average))
         unit_car.append(str(unit.totalScore))
         units_list.append(unit_car)
-    write_cells(page, units_list)
+    Preview(page, units_list)
